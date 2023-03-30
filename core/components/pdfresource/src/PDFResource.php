@@ -418,10 +418,13 @@ class PDFResource
     {
         if ($resource->get('parent')) {
             $containerSuffix = $this->modx->getOption('container_suffix');
+            $url = $this->modx->makeUrl($resource->get('parent'));                
             // remove a container suffix from the end of the url
-            $url = substr($this->modx->makeUrl($resource->get('parent')), 0, -strlen($containerSuffix));
+            if (!empty($containerSuffix)) {
+                $url = substr($this->modx->makeUrl($resource->get('parent')), 0, -strlen($containerSuffix));
+            }
             // remove a remaining extension from the end of the url
-            return preg_replace('#(\.[^.]*)$#', '', $url) . '/';
+            return preg_replace('#(\.[^./]*)$#', '', $url) . ($containerSuffix ?: '/');
         } else {
             return '';
         }
